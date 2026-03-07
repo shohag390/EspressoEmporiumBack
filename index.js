@@ -26,29 +26,24 @@ async function run() {
 
     const database = client.db("EspressoEmporium");
     const usersCollection = database.collection("users");
+    const coffeeCollection = database.collection("coffees");
 
     // Root Route
     app.get("/", (req, res) => {
       res.send("Hello from Express Server");
     });
 
-    // Create a new User
-    app.post("/users", async (req, res) => {
-      const user = req.body;
-      const result = await usersCollection.insertOne(user);
+    // Add Coffee
+    app.post("/coffees", async (req, res) => {
+      const newCoffee = req.body;
+      const result = await coffeeCollection.insertOne(newCoffee);
       res.send(result);
     });
 
-    // Get all Users
-    app.get("/users", async (req, res) => {
-      const users = await usersCollection.find().toArray();
-      res.send(users);
-    });
-
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!",
-    );
+    // await client.db("admin").command({ ping: 1 });
+    // console.log(
+    //   "Pinged your deployment. You successfully connected to MongoDB!",
+    // );
   } finally {
   }
 }
