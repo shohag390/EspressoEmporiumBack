@@ -39,6 +39,14 @@ async function run() {
       res.send(result);
     });
 
+    // Get Coffees By id
+    app.get("/coffees/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await coffeeCollection.findOne(query);
+      res.send(result);
+    });
+
     // Add Coffee
     app.post("/coffees", async (req, res) => {
       const newCoffee = req.body;
@@ -52,12 +60,20 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await coffeeCollection.deleteOne(query);
       res.send(result);
-    });
 
-    // await client.db("admin").command({ ping: 1 });
-    // console.log(
-    //   "Pinged your deployment. You successfully connected to MongoDB!",
-    // );
+      // Update Coffee
+      app.put("/coffees/:id", async (req, res) => {
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) };
+        const options = { upsert: true };
+        const updatedCoffee = req.body;
+        const updatedDoc = {
+          $set: updatedCoffee,
+        };
+        const result = coffeeCollection.updateOne(filter, updatedDoc, options);
+        res.send(result);
+      });
+    });
   } finally {
   }
 }
