@@ -35,8 +35,16 @@ async function run() {
 
     // Create Users
     app.post("/users", async (req, res) => {
-      const newUsers = req.body;
-      const result = await usersCollection.insertOne(newUsers);
+      const user = req.body;
+
+      const query = { email: user.email };
+      const existingUser = await usersCollection.findOne(query);
+
+      if (existingUser) {
+        return res.send({ message: "user already exists" });
+      }
+
+      const result = await usersCollection.insertOne(user);
       res.send(result);
     });
 
@@ -54,15 +62,16 @@ async function run() {
       res.send(result);
     });
 
-    // Update Users
-    app.put("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const updatedCoffee = req.body;
-
-      const result = await usersCollection.updateOne(
-        { _id: new ObjectId(id) },
-        { $set: updatedCoffee },
-      );
+    // Update Users by Login user
+    app.patch("/users", async (req, res) => {
+      const { email, lastSignInTime } = req.body;
+      const filter = { email: email };
+      const updatedDoc = {
+        $set: {
+          lastSignInTime: lastSignInTime,
+        },
+      };
+      const result = await usersCollection.updateOne(filter, updatedDoc);
       res.send(result);
     });
 
