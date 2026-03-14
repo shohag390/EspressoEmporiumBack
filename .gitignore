@@ -49,3 +49,5 @@ Thumbs.db
 # MongoDB local data (if any)
 data/
 dump/
+.vercel
+.env*.local
