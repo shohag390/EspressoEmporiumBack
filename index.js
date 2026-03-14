@@ -22,16 +22,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
 
     const database = client.db("EspressoEmporium");
     const usersCollection = database.collection("users");
     const coffeeCollection = database.collection("coffees");
-
-    // Root Route
-    app.get("/", (req, res) => {
-      res.send("Hello from Express Server");
-    });
 
     // Create Users
     app.post("/users", async (req, res) => {
@@ -115,13 +110,18 @@ async function run() {
       );
       res.send(result);
     });
-
-    //
   } finally {
   }
 }
-run();
+run().catch(console.dir);
 
-// app.listen(port, () => {
-//   console.log(`Express server is running on port: ${port}`);
-// });
+// Root Route
+app.get("/", (req, res) => {
+  res.json({
+    message: "Api Working",
+  });
+});
+
+app.listen(port, () => {
+  console.log(`server running at http://localhost:${port}`);
+});
