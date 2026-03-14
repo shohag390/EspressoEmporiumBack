@@ -120,8 +120,8 @@ async function run() {
   } finally {
   }
 }
-run().catch(console.dir);
+run();
 
-app.listen(port, () => {
-  console.log(`Express server is running on port: ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Express server is running on port: ${port}`);
+// });
