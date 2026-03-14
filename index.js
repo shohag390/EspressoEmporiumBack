@@ -33,6 +33,13 @@ async function run() {
       res.send("Hello from Express Server");
     });
 
+    // Create Users
+    app.post("/users", async (req, res) => {
+      const newUsers = req.body;
+      const result = await usersCollection.insertOne(newUsers);
+      res.send(result);
+    });
+
     // Get Coffees
     app.get("/coffees", async (req, res) => {
       const result = await coffeeCollection.find().toArray();
@@ -60,20 +67,21 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await coffeeCollection.deleteOne(query);
       res.send(result);
-
-      // Update Coffee
-      app.put("/coffees/:id", async (req, res) => {
-        const id = req.params.id;
-        const filter = { _id: new ObjectId(id) };
-        const options = { upsert: true };
-        const updatedCoffee = req.body;
-        const updatedDoc = {
-          $set: updatedCoffee,
-        };
-        const result = coffeeCollection.updateOne(filter, updatedDoc, options);
-        res.send(result);
-      });
     });
+
+    // Update Coffee
+    app.put("/coffees/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedCoffee = req.body;
+
+      const result = await coffeeCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updatedCoffee },
+      );
+      res.send(result);
+    });
+
+    //
   } finally {
   }
 }
