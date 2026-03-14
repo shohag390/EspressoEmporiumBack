@@ -40,6 +40,32 @@ async function run() {
       res.send(result);
     });
 
+    // Get Users
+    app.get("/users", async (req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+    });
+
+    // Delete Users
+    app.delete("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // Update Users
+    app.put("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedCoffee = req.body;
+
+      const result = await usersCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updatedCoffee },
+      );
+      res.send(result);
+    });
+
     // Get Coffees
     app.get("/coffees", async (req, res) => {
       const result = await coffeeCollection.find().toArray();
