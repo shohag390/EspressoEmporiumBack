@@ -59,11 +59,13 @@ async function run() {
 
     // Update Users by Login user
     app.patch("/users", async (req, res) => {
-      const { email, lastSignInTime } = req.body;
-      const filter = { email: email };
+      const { email, lastSignInTime, displayName, photoURL } = req.body;
+      const filter = { email };
       const updatedDoc = {
         $set: {
-          lastSignInTime: lastSignInTime,
+          lastSignInTime,
+          displayName,
+          photoURL,
         },
       };
       const result = await usersCollection.updateOne(filter, updatedDoc);
